@@ -1,0 +1,24 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: deployment/Dockerfile
+        image: acc
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        ports:
+            - "${APP_PORT:-80}:80"
+        environment:
+            XDEBUG_MODE: "${SAIL_XDEBUG_MODE:-off}"
+            XDEBUG_CONFIG: "${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}"
+        volumes:
+            - ".:/app"
+            - "./deployment/php-develop.ini:/usr/local/etc/php/conf.d/php.ini"
+            - "/app/storage"
+            - "/app/bootstrap/cache"
+        networks:
+            - sail
+
+networks:
+    sail:
+        driver: bridge
