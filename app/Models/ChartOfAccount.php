@@ -32,7 +32,7 @@ class ChartOfAccount extends Model {
         parent::booted();
 
         static::creating(function ($model) {
-            $type = $model->type;
+            $type = strtoupper($model->type->value);
             $prefix = "COA/{$type}";
 
             $latest = self::where('code', 'ilike', "{$prefix}/%")

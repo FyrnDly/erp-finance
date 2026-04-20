@@ -25,7 +25,7 @@ return new class extends Migration
             $table->id();
             $table->string('code')->nullable()->unique();
             $table->enum('status', ['pending','approved','rejected'])->default('pending');
-            $table->decimal('amount', 15, 2)->default(0);
+            $table->bigInteger('amount')->default(0);
             $table->date('date');
             $table->date('approved_date')->nullable();
             $table->text('description')->nullable();
@@ -55,8 +55,8 @@ return new class extends Migration
             $table->foreignId('invoice_id')->constrained('invoices')->onDelete('cascade')->onUpdate('cascade');
             $table->string('name');
             $table->integer('quantity');
-            $table->decimal('price', 15, 2)->default(0);
-            $table->decimal('total', 15, 2)->default(0);
+            $table->bigInteger('price')->default(0);
+            $table->bigInteger('total')->default(0);
             $table->timestamps();
         });
         
@@ -76,8 +76,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('entry_id')->constrained('journal_entries')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('coa_id')->constrained('chart_of_accounts')->onDelete('cascade')->onUpdate('cascade');
-            $table->decimal('debit', 15, 2)->default(0);
-            $table->decimal('credit', 15, 2)->default(0);
+            $table->bigInteger('debit')->default(0);
+            $table->bigInteger('credit')->default(0);
             $table->timestamps();
         });
     }

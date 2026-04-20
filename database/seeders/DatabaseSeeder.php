@@ -23,21 +23,21 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'manager',
+            'name' => 'Manager',
             'username' => 'manager',
             'email' => 'manager@fyrn.my.id',
             'password' => Hash::make('manager'),
         ])->groups()->attach(Group::where('name', 'manager')->value('id'));
         
         User::create([
-            'name' => 'staff',
+            'name' => 'Staff',
             'username' => 'staff',
             'email' => 'staff@fyrn.my.id',
             'password' => Hash::make('staff'),
         ])->groups()->attach(Group::where('name', 'staff')->value('id'));
 
         ChartOfAccount::create([
-            'name' => 'Saldo Penyeimbang Awal',
+            'name' => 'Saldo Penyeimbang',
             'type' => 'equity',
             'description' => 'Saldo Penyeimbang digunakan untuk menyeimbangkan modal awal yang ditambahkan' // Diperbaiki
         ]);

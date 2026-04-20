@@ -36,7 +36,7 @@ class JournalEntry extends Model {
             $source = 'SELF';
             if ($model->invoice_id) $source = 'INV';
             if ($model->expense_id) $source = 'EXP';
-            if (request()->routeIs('setup-wizard.*')) $source = 'OPEN';
+            if (request()->routeIs('filament.admin.pages.on-boarding')) $source = 'OPEN';
             
             $prefix = "JE/{$source}/{$date}";
             $latest = self::where('code', 'ilike', "{$prefix}/%")

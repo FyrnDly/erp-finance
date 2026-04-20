@@ -14,7 +14,7 @@ enum CoaType: string implements HasLabel, HasColor {
 
     public function getLabel(): string {
         return match($this) {
-            self::Asset => 'Aset',
+            self::Asset => 'Aktiva (Aset)',
             self::Liability => 'Kewajiban (Hutang)',
             self::Equity => 'Ekuitas (Modal)',
             self::Revenue => 'Pendapatan',

@@ -27,6 +27,14 @@ class User extends Authenticatable {
         return $this->belongsToMany(Group::class, 'group_user', 'user_id', 'group_id');
     }
 
+    public function isManager(): bool {
+        return $this->groups()->where('name', 'manager')->exists();
+    }
+
+    public function isStaff(): bool {
+        return $this->groups()->where('name', 'staff')->exists();
+    }
+
     public function canAccessPanel(Panel $panel): bool {
         return true;
     }
