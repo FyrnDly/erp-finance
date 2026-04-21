@@ -4,6 +4,7 @@ namespace App\Filament\Widgets\Staff;
 
 use App\Models\Invoice;
 use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Tables\Columns\Layout\Grid;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
@@ -30,19 +31,42 @@ class InvoiceTable extends TableWidget {
         return $table
             ->query(fn (): Builder => Invoice::query()->where('submitted_by', Auth::id())->latest())
             ->columns([
-                Stack::make([
-                    Grid::make(2)->schema([
-                        TextColumn::make('issue_date')->date('d M Y'),
-                        TextColumn::make('due_date')->date('d M Y'),
+                Grid::make(3)->schema([
+                    Stack::make([
+                        TextColumn::make('code')
+                            ->badge(),
+                        TextColumn::make('coa.name'),
+                        TextColumn::make('issue_date')
+                            ->label('Tgl. Terbit')
+                            ->date(),
                     ]),
-                    TextColumn::make('code')
-                        ->color('info')
-                        ->badge(),
-                    TextColumn::make('coa.name')
-                        ->description(fn ($record) => $record->subject)
-                        ->weight('bold'),
-                    TextColumn::make('status')->badge(),
-                ]),
+                    
+                    Stack::make([
+                        TextColumn::make('status')->badge(),
+                        TextColumn::make('subject')->weight('bold'),
+                        TextColumn::make('approve.name')->visible(fn ($state) => $state),
+                    ]),
+                    
+                    Stack::make([
+                        TextColumn::make('grand_total')
+                            ->label('Total')
+                            ->getStateUsing(fn ($record) => $record->items->sum('total'))
+                            ->money('IDR')
+                            ->weight('bold')
+                            ->color('success'),
+                        TextColumn::make('due_date')
+                            ->date('d M Y')
+                            ->color('danger')
+                            ->size('xs')
+                            ->prefix('Jatuh tempo: '),
+                    ])->alignEnd(),
+                ])
+            ])
+            ->recordAction('view')
+            ->recordActions([
+                Action::make('view')
+                    ->hiddenLabel()
+                    ->action(fn ($record) => redirect()->route('filament.admin.resources.invoices.view', ['record' => $record]))
             ])
             ->paginated(false)
             ->recordClasses(fn () => 'limit-height')

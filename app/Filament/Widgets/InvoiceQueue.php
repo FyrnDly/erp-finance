@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Invoice;
 use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Tables\Columns\Layout\Grid;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
@@ -28,18 +29,37 @@ class InvoiceQueue extends TableWidget {
         return $table
             ->query(fn (): Builder => Invoice::query()->where('status', 'unpaid')->latest())
             ->columns([
-                Stack::make([
-                    Grid::make(2)->schema([
-                        TextColumn::make('issue_date')->date('d M Y'),
-                        TextColumn::make('due_date')->date('d M Y'),
+                Grid::make(2)->schema([
+                    Stack::make([
+                        TextColumn::make('code')
+                            ->badge(),
+                        TextColumn::make('coa.name'),
+                        TextColumn::make('subject')
+                            ->weight('lgiht')
+                            ->size('sm')
+                            ->limit(25)
                     ]),
-                    TextColumn::make('code')
-                        ->color('info')
-                        ->badge(),
-                    TextColumn::make('coa.name')
-                        ->description(fn ($record) => $record->subject)
-                        ->weight('bold')
+                    
+                    Stack::make([
+                        TextColumn::make('due_date')
+                            ->date('d M Y')
+                            ->color('danger')
+                            ->size('xs')
+                            ->prefix('Jatuh tempo: '),
+                        TextColumn::make('grand_total')
+                            ->label('Total')
+                            ->getStateUsing(fn ($record) => $record->items->sum('total'))
+                            ->money('IDR')
+                            ->weight('bold')
+                            ->color('success'),
+                    ])->alignEnd(),
                 ]),
+            ])
+            ->recordAction('view')
+            ->recordActions([
+                Action::make('view')
+                    ->hiddenLabel()
+                    ->action(fn ($record) => redirect()->route('filament.admin.resources.invoices.view', ['record' => $record]))
             ])
             ->paginated(false)
             ->recordClasses(fn () => 'limit-height')

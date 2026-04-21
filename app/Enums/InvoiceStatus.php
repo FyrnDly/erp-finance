@@ -22,15 +22,15 @@ enum InvoiceStatus: string implements HasLabel, HasColor, HasIcon {
 
     public function getColor(): string|array|null {
         return match ($this) {
-            self::Unpaid => 'danger',
+            self::Unpaid => 'warning',
             self::Paid => 'success',
         };
     }
     
     public function getIcon(): string|BackedEnum|Htmlable|null {
         return match ($this) {
-            self::Unpaid => Heroicon::Clock,
-            self::Paid => Heroicon::CheckBadge,
+            self::Unpaid => Heroicon::OutlinedClock,
+            self::Paid => Heroicon::OutlinedCheckBadge,
         };
     }
 }

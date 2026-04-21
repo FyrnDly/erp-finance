@@ -45,8 +45,6 @@ class Invoice extends Model {
             $prefix = "INV/{$date}";
 
             $latest = self::where('code', 'ilike', "{$prefix}/%")
-                ->whereMonth('date', now()->month)
-                ->whereYear('date', now()->year)
                 ->orderBy('code', 'desc')
                 ->value('code');
 
