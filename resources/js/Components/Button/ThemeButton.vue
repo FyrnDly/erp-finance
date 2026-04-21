@@ -2,12 +2,10 @@
 import { ref, onMounted } from 'vue';
 import { MoonIcon, SunIcon } from '@heroicons/vue/24/solid';
 
-// Gunakan variabel reaktif Vue, bukan document.getElementById
 const isDark = ref(false);
 
-// onMounted berjalan SETELAH HTML siap di layar
 onMounted(() => {
-    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         isDark.value = true;
         document.documentElement.classList.add('dark');
     } else {
@@ -16,16 +14,15 @@ onMounted(() => {
     }
 });
 
-// Fungsi untuk mengganti tema (dipanggil oleh @click di HTML)
 const toggleTheme = () => {
     isDark.value = !isDark.value;
 
     if (isDark.value) {
         document.documentElement.classList.add('dark');
-        localStorage.setItem('color-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
     } else {
         document.documentElement.classList.remove('dark');
-        localStorage.setItem('color-theme', 'light');
+        localStorage.setItem('theme', 'light');
     }
 };
 </script>

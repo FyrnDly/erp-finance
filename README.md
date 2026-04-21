@@ -1,58 +1,105 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ERP Finance
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**ERP-Finance** is a comprehensive Enterprise Resource Planning (ERP) system tailored for financial management. It automates complex accounting workflows, ensures real-time data accuracy, and streamlines the bridge between operational tasks and financial reporting. Built with a modern tech stack, it emphasizes data integrity through automated balancing and strict Role-Based Access Control (RBAC).
 
-## About Laravel
+## 🚀 Key Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 1. Advanced Ledger Management
+* **Dynamic Chart of Accounts (CoA)**: Supports hierarchical account structures with automated prefix-based code generation for Assets, Liabilities, Equity, Revenue, and Expenses.
+* **Wizard-Driven Journal Entries**: Features a multi-step wizard to guide users through complex financial recordings[cite: 2].
+* **Real-time Balance Validation**: Implements a strict validation engine that prevents saving any journal entry where Total Debit does not equal Total Credit[cite: 2].
+* **Automated Bookkeeping**: Transactions from operational modules like Invoices and Expenses automatically trigger background journal entries, ensuring the ledger is always up-to-date[cite: 1].
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 2. Operational Modules
+* **Expense Management**: Allows staff to submit expenditure requests with a dedicated verification flow for managers to approve and liquidate funds.
+* **Invoice & Revenue Tracking**: Manages client billings with reactive subtotal calculations and automated revenue recognition upon payment[cite: 1].
+* **Audit-Ready History**: Maintains a clear audit trail for every transaction, including creator and approver details[cite: 1].
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 3. User Experience & Interface
+* **Single Page Application (SPA)**: Powered by Inertia.js for seamless, lightning-fast navigation without full-page reloads.
+* **Hybrid Layout**: Seamlessly integrates a robust admin panel for internal management and a clean, responsive landing page for general access.
+* **Dark Mode Support**: Includes a persistent theme switcher that adapts UI elements and assets (like logos) based on user preference.
 
-## Learning Laravel
+## 🛠️ Tech Stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* **Backend**: Laravel 13, Filament v5 (Schema-based Architecture).
+* **Frontend**: Vue.js 3, Inertia.js, Tailwind CSS, Flowbite.
+* **Routing**: Ziggy Vue for shared Laravel routes in JavaScript.
+* **Containerization**: Docker with Supervisor management.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## ⚙️ Getting Started
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
+### 1. Clone the Repository
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/FyrnDly/erp-finance.git
+cd erp-finance
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Environment Setup
+```bash
+cp .env.example .env
+# Adjust your DB_HOST and other credentials in .env
+```
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🐳 Option 1: Running with Docker (Recommended)
 
-## Code of Conduct
+This method uses the provided **Docker Compose** setup which isolates the environment and manages both the web server and queue workers automatically via **Supervisor**.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. **Build and Start Containers**
+   ```bash
+   docker compose up --build
+   ```
+   *The container will automatically run `php artisan storage:link`, `ziggy:generate`, and cache your configurations upon startup.*
 
-## Security Vulnerabilities
+2. **Run Migrations & Seed (First time only)**
+   ```bash
+   docker compose exec app php artisan migrate --seed
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3. **Access the Application**
+   * URL: `http://localhost:8000`
+   * *The internal container runs on port 80, managed by Supervisor.*
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 💻 Option 2: Local Development (Without Docker)
+
+Use this method if you prefer running the application directly on your host machine.
+
+1. **Install Dependencies**
+   ```bash
+   composer install
+   npm install
+   ```
+
+2. **Generate Key & Migrate**
+   ```bash
+   php artisan key:generate
+   php artisan migrate --seed
+   ```
+
+3. **Configure Composer Script**
+   Ensure your `composer.json` includes the following script for a unified dev experience:
+   ```json
+   "scripts": {
+       "dev": [
+           "php artisan ziggy:generate",
+           "npx concurrently \"php artisan serve\" \"npm run dev\" --names=\"server,vite\" --prefix-colors=\"blue,magenta\""
+       ]
+   }
+   ```
+
+4. **Run Application**
+   ```bash
+   composer run dev
+   ```
+
+---
+
+## 🔐 Access Control
+
+The system utilizes Laravel Model Policies to strictly enforce roles:
+* **Manager**: Can configure the Chart of Accounts, manage all journal entries, and perform final verification on all operational documents.
+* **Staff**: Can create and manage their own submissions (Invoices/Expenses) while awaiting managerial approval.

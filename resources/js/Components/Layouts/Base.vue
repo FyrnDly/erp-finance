@@ -6,7 +6,7 @@ import TopBar from '../Navigation/TopBar.vue'
 <template>
 
     <Head>
-        <title>PT Anugerah Cahaya Chandra</title>
+        <title>Beranda</title>
         <link rel="icon" type="image/png" href="/assets/logo/white.svg">
     </Head>
 

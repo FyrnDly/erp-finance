@@ -13,8 +13,8 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --ignore-platform-reqs
 
 COPY . .
-RUN npm install && npm run build && \
-    php artisan key:generate # Temp Develop build
+RUN php artisan ziggy:generate && \
+    npm install && npm run build
 
 # -------------------------------------------------------
 # 2) Production stage
@@ -25,7 +25,8 @@ USER root
 WORKDIR /app
 
 RUN apt update && apt install -y supervisor \
-    libicu-dev zlib1g-dev libpng-dev && \
+    libicu-dev zlib1g-dev libpng-dev \
+    nodejs npm && \
     docker-php-ext-install intl gd bcmath && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -35,10 +36,11 @@ COPY ./deployment/supervisord.conf /etc/supervisor/supervisord.conf
 COPY ./deployment/start.sh /usr/local/bin/start.sh
 
 RUN chmod +x /usr/local/bin/start.sh && \
+    chmod -R 775 /app/bootstrap/ssr && \
+    chown -R www-data:www-data /app/bootstrap/ssr &&\
     chown -R www-data:www-data /app/storage /app/bootstrap/cache && \
     rm -rf /app/deployment 
 
 USER www-data
 EXPOSE 80
-
 CMD ["/usr/local/bin/start.sh"]

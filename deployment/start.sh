@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-# Link storage
+# Link storage and generate new key
+php artisan key:generate || true
 php artisan storage:link || true
 
 # Cache config
