@@ -1,10 +1,13 @@
+import { createSSRApp, h } from 'vue'
+import { renderToString } from '@vue/server-renderer'
 import { createInertiaApp } from '@inertiajs/vue3'
 import createServer from '@inertiajs/vue3/server'
-import { renderToString } from 'vue/server-renderer'
-import { createSSRApp, h } from 'vue'
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 import { ZiggyVue } from 'ziggy-js'
+import { Ziggy } from './ziggy'
+import BaseLayout from './Components/Layouts/Base.vue'
 
-createServer(page =>
+createServer((page) =>
     createInertiaApp({
         page,
         render: renderToString,
@@ -27,5 +30,5 @@ createServer(page =>
                     location: new URL(props.initialPage.url, Ziggy.url),
                 });
         },
-    }),
+    })
 )

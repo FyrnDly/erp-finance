@@ -5,7 +5,6 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Auth\LoginPage;
 use App\Filament\Pages\DashboardPage;
 use App\Http\Middleware\OnBoarding;
-use App\Http\Middleware\TrustedProxies;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -53,7 +52,6 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                TrustedProxies::class,
                 OnBoarding::class
             ])
             ->authMiddleware([
