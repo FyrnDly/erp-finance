@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Expense;
 use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Tables\Columns\Layout\Grid;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
@@ -27,44 +28,36 @@ class ExpenseQueue extends TableWidget
 
     public function table(Table $table): Table
     {
-        return $table
-            ->query(fn (): Builder => Expense::query()->where('status', 'pending')->latest())
-            ->columns([
+        return $table->query(fn (): Builder => Expense::query()->with(['coa', 'submit'])->where('status', 'pending')->latest())
+        ->columns([
+            Grid::make(2)->schema([
                 Stack::make([
-                    Grid::make(2)->schema([
-                        TextColumn::make('code')
-                            ->color('warning')
-                            ->badge(),
-                        TextColumn::make('amount')
-                            ->money('IDR')
-                            ->alignEnd()
-                            ->weight('bold'),
-                    ]),
-                    
-                    Grid::make(2)->schema([
-                        TextColumn::make('coa.name')
-                            ->icon('heroicon-m-tag')
-                            ->color('gray')
-                            ->size('sm'),
-                        TextColumn::make('submit.name')
-                            ->icon('heroicon-m-user')
-                            ->color('gray')
-                            ->size('sm'),
-                    ]),
-                    
-                    TextColumn::make('description')
-                        ->limit(50)
-                        ->color('gray')
-                        ->size('sm'),
-                        
+                    TextColumn::make('code')
+                        ->color('warning')
+                        ->badge(),
+                    TextColumn::make('coa.name')
+                        ->description(fn($record) => $record->submit->name),
+                ]),
+                Stack::make([
                     TextColumn::make('date')
-                        ->date('d M Y')
-                        ->color('gray')
-                        ->size('xs'),
-                ])->space(3),
-            ])
-            ->paginated(false) 
-            ->striped()
-            ->modifyQueryUsing(fn (Builder $query) => $query->limit(5));
+                        ->label('Tanggal Nota')
+                        ->alignEnd()
+                        ->date(),
+                    TextColumn::make('amount')
+                        ->money('IDR')
+                        ->alignEnd()
+                        ->weight('bold')
+                ])
+            ]),
+        ])
+        ->recordAction('view')
+        ->recordActions([
+            Action::make('view')
+                ->hiddenLabel()
+                ->action(fn ($record) => redirect()->route('filament.admin.resources.expenses.view', ['record' => $record]))
+        ])
+        ->paginated(false) 
+        ->striped()
+        ->modifyQueryUsing(fn (Builder $query) => $query->limit(3));
     }
 }

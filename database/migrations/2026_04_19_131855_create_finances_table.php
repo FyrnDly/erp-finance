@@ -29,6 +29,7 @@ return new class extends Migration
             $table->date('date');
             $table->date('approved_date')->nullable();
             $table->text('description')->nullable();
+            $table->text('refusal')->nullable();
             $table->foreignId('coa_id')->constrained('chart_of_accounts')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('submitted_by')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('cascade')->onUpdate('cascade');

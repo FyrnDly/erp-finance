@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['code', 'status', 'amount', 'date', 'approved_date', 'description', 'coa_id', 'submitted_by', 'approved_by'])]
+#[Fillable(['code', 'status', 'amount', 'date', 'approved_date', 'description', 'refusal', 'coa_id', 'submitted_by', 'approved_by'])]
 class Expense extends Model {
     use SoftDeletes;
 
@@ -41,8 +41,6 @@ class Expense extends Model {
             $prefix = "EXP/{$date}";
 
             $latest = self::where('code', 'ilike', "{$prefix}/%")
-                ->whereMonth('date', now()->month)
-                ->whereYear('date', now()->year)
                 ->orderBy('code', 'desc')
                 ->value('code');
 

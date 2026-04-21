@@ -33,9 +33,9 @@ enum ExpenseStatus: string implements HasLabel, HasColor, HasIcon
 
     public function getIcon(): string|BackedEnum|Htmlable|null {
         return match ($this) {
-            self::Pending => Heroicon::Clock,
-            self::Approved => Heroicon::CheckCircle,
-            self::Rejected => Heroicon::XCircle,
+            self::Pending => Heroicon::OutlinedClock,
+            self::Approved => Heroicon::OutlinedCheckBadge,
+            self::Rejected => Heroicon::OutlinedXCircle,
         };
     }
 }
