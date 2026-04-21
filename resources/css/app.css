@@ -1,10 +1,15 @@
 @import 'tailwindcss';
+@import "flowbite/src/themes/default";
+@plugin "flowbite/plugin";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@source "../node_modules/flowbite";
 
+/* input.css */
+@custom-variant dark (&:where(.dark, .dark *));
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
