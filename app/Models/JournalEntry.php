@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -26,6 +27,22 @@ class JournalEntry extends Model {
     
     public function user(): BelongsTo {
         return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    protected function balance(): Attribute {
+        return Attribute::make(
+            get: function () {
+                $totalDebit = $this->items->sum('debit');
+                $totalCredit = $this->items->sum('credit');
+                
+                $isBalanced = $totalDebit === $totalCredit;
+                return (object) [
+                    'total' => $totalDebit,
+                    'status' => $isBalanced ? 'Seimbang (Balanced)' : 'Tidak Seimbang',
+                    'is_balanced' => $isBalanced,
+                ];
+            }
+        );
     }
 
     protected static function booted(): void {

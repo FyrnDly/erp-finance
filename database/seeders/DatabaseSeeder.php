@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
 
         ChartOfAccount::create([
             'name' => 'Saldo Penyeimbang',
+            'code' => 'COA/BALANCE/0001',
             'type' => 'equity',
             'description' => 'Saldo Penyeimbang digunakan untuk menyeimbangkan modal awal yang ditambahkan' // Diperbaiki
         ]);
